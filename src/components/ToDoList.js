@@ -45,6 +45,7 @@ function ToDoList() {
             <h1>Yapılacaklar Listesi</h1>
             <ToDoForm onSubmit = {addTodo}/>
             <ToDo todos = {todos} completeTodo={completeTodo} removeTodo = {removeTodo} updateTodo = {updateTodo}/>
+            <div>{todos.length === 0 ? "To Do List is empty" : ""}</div>
         </div>
     );
 }

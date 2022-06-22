@@ -18,12 +18,11 @@ body {
     flex-direction: column;
     justify-content: start;
     width: 520px;
-    min-height: 600px;
-    background: #161a2b;
+    min-height: 128px;
+    background: white;
     text-align: center;
     margin: 128px auto;
     border-radius: 10px;
-    padding-bottom: 32px;
 }
 
 h1 {
@@ -48,7 +47,7 @@ h1 {
     outline: none;
     width: 320px;
     background: transparent;
-    color: #fff;
+    color: black;
 }
 
 .todo-input::placeholder {
@@ -144,4 +143,75 @@ h1 {
 
 .edit-icon {
     color: #fff;
+}
+
+input[type="text"],
+input[type="password"] {
+    height: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #01d28e;
+    border: 1px solid #01d28e;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+input[type="submit"]:hover {
+    background: #6cf0c2;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: gray;
+    border: 1px solid black;
+    color: #fff;
+    padding: 10px;
+}
+
+.register-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: orange;
+    border: 1px solid black;
+    color: #fff;
+    padding: 10px;
+}
+
+.login-form {
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.list-container {
+    display: flex;
+}
+
+.error {
+    color: red;
+    font-size: 15px;
+}
+
+.title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px;
 }

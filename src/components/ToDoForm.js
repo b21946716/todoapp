@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-function ToDoForm(props) {
+function ToDoForm(props, todos) {
     const [input, setInput] = useState(props.edit ? props.edit.value : "")
 
     const inputRef = useRef(null)
@@ -29,7 +29,7 @@ function ToDoForm(props) {
             {props.edit ? (
                 <>
                     <input
-                        placeholder="Update your todo"
+                        placeholder="Update your to do"
                         value={input}
                         name="text"
                         className="todo-input edit"
@@ -45,7 +45,7 @@ function ToDoForm(props) {
             ) : (
                 <>
                     <input
-                        placeholder="Todo ekle"
+                        placeholder="To Do"
                         value={input}
                         name="text"
                         className="todo-input"
@@ -55,7 +55,7 @@ function ToDoForm(props) {
                     <button
                         onClick = {handleSubmit}
                         className="todo-button">
-                        Todo Ekle
+                        Add
                     </button>
                 </>)
             }
