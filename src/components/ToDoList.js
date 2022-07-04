@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 import ToDoForm from "./ToDoForm";
 import ToDo from "./ToDo";
+import "./ToDoList.css"
 
-function ToDoList() {
+function ToDoList({setIsSubmitted, textUsername}) {
     const [todos, setTodos] = useState([]);
 
     const addTodo = todo => {
         if(!todo.text) {
-            alert("Geçerli bir todo giriniz");
+            alert("Enter a valid to do");
             return;
         }
 
@@ -40,12 +41,18 @@ function ToDoList() {
         setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
     }
 
+    const exit = (event) => {
+        event.preventDefault()
+        setIsSubmitted(false);
+    }
+
     return (
         <div>
-            <h1>Yapılacaklar Listesi</h1>
+            <p>Welcome {textUsername}</p>
             <ToDoForm onSubmit = {addTodo}/>
             <ToDo todos = {todos} completeTodo={completeTodo} removeTodo = {removeTodo} updateTodo = {updateTodo}/>
             <div>{todos.length === 0 ? "To Do List is empty" : ""}</div>
+            <button className={"exit-button"} onClick={exit}> {"Exit"} </button>
         </div>
     );
 }

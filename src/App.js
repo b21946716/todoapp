@@ -1,36 +1,44 @@
 import React, {useState} from "react";
 import ToDoList from "./components/ToDoList";
 import "./App.css";
+import User from "./components/User";
+import {AiFillEyeInvisible} from "react-icons/ai"
+import {AiFillEye} from "react-icons/ai"
 
 function App() {
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isRegistered, setIsRegistered] = useState(false);
-    const [usernames, setUsernames] = useState(["user1", "user2"]);
-    const [passwords, setPasswords] = useState(["pass1", "pass2"]);
+    const [isRegistered, setIsRegistered] = useState(true);
+    const [users, setUsers] = useState([]);
+    const [isFalseUsername, setIsFalseUsername] = useState(true);
 
     const errors = {
-        uname: "invalid username",
-        pass: "invalid password"
+        uname: "Invalid Username",
+        pass: "Invalid Password",
+        hasUsername: "This Username Is Taken"
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         var {uname, pass} = document.forms[0];
+        console.log(users);
 
-        console.log(usernames);
-        console.log(passwords);
-        const userIndex = usernames.indexOf(uname.value);
-        const correctPassword = passwords[userIndex];
-
-        if (userIndex !== -1){
-            if (correctPassword === pass.value){
-                setIsSubmitted(true);
-            } else {
-                setErrorMessages({name: "pass", message: errors.pass});
+        for (let i = 0; i < users.length; i++){
+            if (users[i].username === uname.value){
+                setIsFalseUsername(false);
+                if (users[i].password === pass.value){
+                    setIsSubmitted(true);
+                    break;
+                } else {
+                    setErrorMessages({name: "pass", message: errors.pass});
+                    break;
+                }
             }
-        } else {
+            setIsFalseUsername(true);
+        }
+
+        if (isFalseUsername){
             setErrorMessages({name: "uname", message: errors.uname});
         }
     };
@@ -39,7 +47,6 @@ function App() {
         name === errorMessages.name && (
             <div className="error">{errorMessages.message}</div>
         );
-
 
     const [passwordShown, setPasswordShown] = useState(false);
 
@@ -50,14 +57,21 @@ function App() {
 
     const register = (event) => {
         event.preventDefault();
-        if (textUsername){
+
+        let validUsername = true;
+        for (let i = 0; i < users.length; i++){
+            if (textUsername === users[i].username){
+                validUsername = false;
+                break;
+            }
+        }
+
+        if (textUsername && validUsername){
             if (textPassword){
                 if (textPassword === textPasswordValidation && textPassword){
                     setIsRegistered(true);
-                    const newUsernames = [textUsername, ...usernames];
-                    setUsernames(newUsernames);
-                    const newPasswords = [textPassword, ...passwords];
-                    setPasswords(newPasswords);
+                    const newUsers = [new User(textUsername, textPassword), ...users];
+                    setUsers(newUsers);
                 } else {
                     alert("Password is incorrect");
                 }
@@ -65,7 +79,8 @@ function App() {
                 setErrorMessages({name: "passReg", message: errors.pass});
             }
         } else {
-            setErrorMessages({name: "unameReg", message: errors.uname});
+            if (validUsername) setErrorMessages({name: "unameReg", message: errors.uname});
+            else setErrorMessages({name: "unameReg", message: errors.hasUsername})
         }
     }
 
@@ -76,7 +91,7 @@ function App() {
     const handleChangeUsername = (event) => {
         setTextUsername(event.target.value)
     }
-
+    
     const handleChangePassword = (event) => {
         setTextPassword(event.target.value)
     }
@@ -85,25 +100,48 @@ function App() {
         setTextPasswordValidation(event.target.value)
     }
 
+    const signup = (event) => {
+        event.preventDefault()
+        setIsRegistered(false)
+    }
+
+    const signin = (event) => {
+        event.preventDefault()
+        {isRegistered ? handleSubmit(event) : setIsRegistered(true)}
+    }
+
     const renderForm = (
         <div className="form">
             <form onSubmit={handleSubmit}>
                 <div className="input-container">
-                    <label>Username </label>
+                    <label>Username</label>
                     <input type="text" name="uname" placeholder="Username" value={textUsername} onChange={handleChangeUsername} required/>
                     {isRegistered ? renderErrorMessage("uname") : renderErrorMessage("unameReg")}
                 </div>
-                <div className="input-container">
-                    <label>Password </label>
-                    <input type={passwordShown ? "text" : "password"} name = "pass" placeholder="Password" value={textPassword} onChange={handleChangePassword} required/>
-                    {isRegistered ? <div/> : <input type={"password"} name = "pass" placeholder="Password" value={textPasswordValidation} onChange={handleChangePasswordValidation} required/>}
-                    <button className={isRegistered ? "button-container": "register-button"} onClick={isRegistered ? togglePassword: register}> {isRegistered ? passwordShown ? "Hide Password" : "Show Password" : "Sign Up"}</button>
-                    {isRegistered ? renderErrorMessage("pass") : renderErrorMessage("passReg")}
-                </div>
-                {isRegistered ?
-                    <div>
-                        <input type="submit"/>
-                    </div> :  <div/>}
+                <label>Password</label>
+                {isRegistered ? <div>
+                        <div className="password-container">
+                            <input type={passwordShown ? "text" : "password"} name="pass" placeholder="Password"
+                                   value={textPassword} onChange={handleChangePassword} required/>
+                            <button className={"button-container"}
+                                    onClick={togglePassword}> {passwordShown ?
+                                <AiFillEye/> : <AiFillEyeInvisible/>}</button>
+                        </div>
+                        {renderErrorMessage("pass")}
+                    </div>
+                    : <div className="validation-container">
+                        <input type={passwordShown ? "text" : "password"} name="pass" placeholder="Password"
+                               value={textPassword} onChange={handleChangePassword} required/>
+                        <input type={"password"} name="pass" placeholder="Password" value={textPasswordValidation}
+                               onChange={handleChangePasswordValidation} required/>
+                        {renderErrorMessage("passReg")}
+                        <button className="register-button"
+                                onClick={register}>Sign Up
+                        </button>
+                    </div>
+                }
+                {isRegistered ? <button className={"register-button"} onClick={signup}> {"Sign Up"} </button> : <button className={"signin-button"} onClick={signin}> {"Sign In"} </button>}
+                {isRegistered ? <button type="submit" className={"signin-button"} onClick={signin}> {"Sign In"} </button> :  <div/>}
             </form>
         </div>
     );
@@ -112,7 +150,7 @@ function App() {
         <div className = "todo-app">
             <div> </div>
             <div className="login-form">
-                {isRegistered ? isSubmitted ? <div className="title"> To Do List <ToDoList/></div> : <div className="title"> Sign In </div> : <div className="title"> Sign Up </div>}
+                {isRegistered ? isSubmitted ? <div className="title"> To Do List <ToDoList setIsSubmitted={setIsSubmitted} textUsername={textUsername}></ToDoList></div> : <div className="title"> Sign In </div> : <div className="title"> Sign Up </div>}
                 {isSubmitted ? <div/>: renderForm}
             </div>
         </div>
